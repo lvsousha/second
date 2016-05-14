@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stone.mapper.UserMapper">
+
+    <resultMap type="com.stone.model.User" id="userResult">
+        		<result property="id" column="id" />
+        		<result property="username" column="username" />
+        		<result property="password" column="password" />
+        		<result property="email" column="email" />
+        		<result property="created" column="created" />
+        		<result property="updated" column="updated" />
+    </resultMap>
+
+    <insert id="insertUser" parameterType="com.stone.model.User">
+		insert into sec_user(
+						username,
+						password,
+						email,
+						created,
+						updated
+		) values (
+					#{username,jdbcType=VARCHAR},
+					#{password,jdbcType=VARCHAR},
+					#{email,jdbcType=VARCHAR},
+					#{created,jdbcType=DATE},
+					#{updated,jdbcType=DATE}
+		)
+	</insert>
+
+    <select id="selectAll" resultMap="userResult">
+        select * from sec_user
+    </select>
+
+    <select id="selectUserByUsername" parameterType="String" resultMap="userResult">
+        select *
+        	from sec_user where username=#{username}
+    </select>
+
+    <update id="update" parameterType="com.stone.model.User">
+        update
+        	sec_user set
+        			id=#{id},
+        			username=#{username},
+        			password=#{password},
+        			created=#{created},
+        			updated=#{updated}
+        	where usr_id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete
+        	from sec_user
+        	where usr_id=#{id}
+    </delete>
+
+</mapper>

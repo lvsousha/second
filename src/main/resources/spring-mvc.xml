@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:p="http://www.springframework.org/schema/context"
+		xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	default-lazy-init="true">
+
+	<!-- 只搜索@Controller 标注的类 不搜索其他标注的类 -->
+	<context:component-scan base-package="com.stone.**" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 对某些静态资源，如css,图片等进行过滤 ,有引用 "/resources/**" 的路径引用转到工程的/resources/目录取资源 -->
+	<mvc:resources mapping="/media/**" location="/media/" />
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<!-- <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/**/code"/>
+			<mvc:exclude-mapping path="/extjs/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/images/**"/>
+			<bean class="com.stone.action.interceptor.StoneInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+	
+	<!-- Freemarker配置 -->
+	<bean id="freemarkerConfig"  class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+	    <property name="templateLoaderPath" value="/content/" />
+	    <property name="freemarkerSettings">
+	        <props>
+	            <prop key="template_update_delay">0</prop>
+	            <prop key="default_encoding">UTF-8</prop>
+	            <prop key="number_format">0.##########</prop>
+	            <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+	            <prop key="classic_compatible">true</prop>
+	            <prop key="template_exception_handler">ignore</prop>
+	        </props>
+	    </property>
+	</bean>
+	
+    <!-- 这个是针对返回视图还是json值的视图配置   来分别处理同步和异步请求 -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+            <property name="mediaTypes">
+                <map>
+                    <entry key="html" value="text/html" />
+                    <entry key="json" value="application/json" />
+                </map>
+            </property>
+            <property name="favorPathExtension" value="true" /><!-- 是否启用扩展名支持，默认就是true  /user/{userid}.json -->
+            <property name="favorParameter" value="true" /><!-- 是否启用参数支持，默认就是true /user/{userid}?format=json -->
+            <property name="ignoreAcceptHeader" value="true" /><!-- 是否忽略掉accept header，默认就是false Accept:application/json -->
+            <property name="viewResolvers">
+                <list>
+                    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+                    <bean id="freemarkerViewResolver"  class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+                        <property name="order" value="0"/>
+                        <property name="cache" value="true" />
+                        <property name="prefix" value="" />
+                        <property name="suffix" value=".ftl" />
+                        <property name="contentType" value="text/html;charset=UTF-8"></property>
+                        <property name="requestContextAttribute" value="request" />
+                        <property name="exposeSpringMacroHelpers" value="true" />
+                        <property name="exposeRequestAttributes" value="true" />
+                        <property name="exposeSessionAttributes" value="true" />
+                    </bean>
+                </list>
+            </property>
+            <property name="defaultContentType" value="text/html" />
+        </bean>
+</beans>
