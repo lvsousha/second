@@ -137,18 +137,60 @@ var Login = function () {
 	                error.addClass('help-small no-left-padding').insertAfter(element.closest('.input-icon'));
 	            },
 
-//	            submitHandler: function (form) {
-//	                window.location.href = "index.html";
-//	            }
+	            submitHandler: function (form) {
+                	$.ajax({
+	                	url : "/second/content/forgetPassword",
+						data : $(".forget-form").serialize(),
+						type : "post",
+						dataType : "json",
+						cache : false,
+						async : true,
+						success : function(data){
+							console.log("enter_key_success");
+							if(data.success == true){
+								$('.login-form').show();
+					            $('.forget-form').hide();
+							}else{
+								$('.alert-error', $('.forget-form')).text(data.errorMessage);
+				            	$('.alert-error', $('.forget-form')).show();
+							}
+						},
+						error:function(data){
+							alert("error");
+							console.log(data);
+						}
+	                })
+                }
 	        });
 
 	        $('.forget-form input').keypress(function (e) {
-//	            if (e.which == 13) {
-//	                if ($('.forget-form').validate().form()) {
-//	                    window.location.href = "index.html";
-//	                }
-//	                return false;
-//	            }
+	            if (e.which == 13) {
+	                if ($('.forget-form').validate().form()) {
+	                	$.ajax({
+		                	url : "/second/content/forgetPassword",
+							data : $(".forget-form").serialize(),
+							type : "post",
+							dataType : "json",
+							cache : false,
+							async : true,
+							success : function(data){
+								console.log("enter_key_success");
+								if(data.success == true){
+									$('.login-form').show();
+						            $('.forget-form').hide();
+								}else{
+									$('.alert-error', $('.forget-form')).text(data.errorMessage);
+					            	$('.alert-error', $('.forget-form')).show();
+								}
+							},
+							error:function(data){
+								alert("error");
+								console.log(data);
+							}
+		                })
+	                }
+	                return false;
+	            }
 	        });
 
 	        jQuery('#forget-password').click(function () {

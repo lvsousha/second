@@ -36,6 +36,11 @@
         select *
         	from sec_user where username=#{username}
     </select>
+
+    <select id="selectUserByEmail" parameterType="String" resultMap="userResult">
+        select *
+        	from sec_user where email =  #{email} 
+    </select>
     
     <select id="selectUserByUsernameOrEmail" parameterType="map" resultMap="userResult">
         select *
@@ -47,12 +52,11 @@
     <update id="update" parameterType="com.stone.model.User">
         update
         	sec_user set
-        			id=#{id},
         			username=#{username},
         			password=#{password},
         			created=#{created},
         			updated=#{updated}
-        	where usr_id=#{id}
+        	where id=#{id}
     </update>
 
     <delete id="delete" parameterType="int">

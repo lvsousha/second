@@ -3,6 +3,10 @@
 		<form class="form-vertical forget-form" action="login"  method="post">
 
 			<h3 class="">Forget Password ?</h3>
+			<div class="alert alert-error hide">
+				<button class="close" data-dismiss="alert"></button>
+				<span>Enter any username and password.</span>
+			</div>
 
 			<p>Enter your e-mail address below to reset your password.</p>
 
