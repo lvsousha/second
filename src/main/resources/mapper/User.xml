@@ -36,6 +36,13 @@
         select *
         	from sec_user where username=#{username}
     </select>
+    
+    <select id="selectUserByUsernameOrEmail" parameterType="map" resultMap="userResult">
+        select *
+        	from sec_user 
+        	where username = #{username} 
+        		  or email =  #{email} 
+    </select>
 
     <update id="update" parameterType="com.stone.model.User">
         update

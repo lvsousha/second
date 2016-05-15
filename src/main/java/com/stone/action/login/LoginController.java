@@ -38,6 +38,7 @@ public class LoginController {
 			returnMap.put("errorMessage", "用户名错误");
 		}else if(user.getPassword().equals(password)){
 			returnMap.put("success", true);
+			request.getSession().setAttribute("username", username);
 		}else{
 			returnMap.put("success", false);
 			returnMap.put("errorMessage", "密码错误");
@@ -54,15 +55,26 @@ public class LoginController {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String email = request.getParameter("email");
-		User user = new User();
+		User user = null;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put("username", username);
+		parameters.put("email", email);
 		password = Encryption.getMD5Str(password);
+		user = userMapper.selectUserByUsernameOrEmail(parameters);
 		if(!Check.isEmail(email)){
 			returnMap.put("success", false);
+			returnMap.put("errorMessage", "email is wrong");
+		}else if(user != null){
+			returnMap.put("success", false);
+			returnMap.put("errorMessage", "usename or email is Existed ");
+		}else{			
+			user = new User();
+			user.setUsername(username);
+			user.setPassword(password);
+			user.setEmail(email);
+			userMapper.insertUser(user);
+			request.getSession().setAttribute("username", username);
 		}
-		user.setUsername(username);
-		user.setPassword(password);
-		user.setEmail(email);
-		userMapper.insertUser(user);
 		try {
 			response.getWriter().print(gson.toJson(returnMap));
 		} catch (IOException e) {

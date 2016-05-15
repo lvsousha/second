@@ -213,9 +213,58 @@ var Login = function () {
 	                }
 	            },
 
-//	            submitHandler: function (form) {
-//	                window.location.href = "index.html";
-//	            }
+	            submitHandler: function (form) {
+	                $.ajax({
+	                	url : "/second/content/register",
+						data : $(".register-form").serialize(),
+						type : "post",
+						dataType : "json",
+						cache : false,
+						async : true,
+						success : function(data){
+							console.log("click_success");
+							if(data.success == true){
+								window.location.href = "/second/index";
+							}else{
+								$('.alert-error', $('.register-form')).text(data.errorMessage);
+				            	$('.alert-error', $('.register-form')).show();
+							}
+						},
+						error:function(data){
+							alert("error");
+							console.log(data);
+						}
+	                })
+	            }
+	        });
+	        
+	        $('.register-form input').keypress(function (e) {
+	            if (e.which == 13) {
+	                if ($('.register-form').validate().form()) {
+	                	$.ajax({
+		                	url : "/second/content/register",
+							data : $(".register-form").serialize(),
+							type : "post",
+							dataType : "json",
+							cache : false,
+							async : true,
+							success : function(data){
+								console.log("enter_key_success");
+								if(data.success == true){
+									window.location.href = "/second/index";
+								}else{
+									$('.alert-error', $('.register-form')).text(data.errorMessage);
+					            	$('.alert-error', $('.register-form')).show();
+								}
+							},
+							error:function(data){
+								alert("error");
+								console.log(data);
+							}
+		                })
+	                }
+	                return false;
+	            }
 	        });
 
 	        jQuery('#register-btn').click(function () {
