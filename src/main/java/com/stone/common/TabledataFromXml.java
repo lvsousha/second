@@ -25,13 +25,73 @@ public class TabledataFromXml {
 	public static void main(String[] args) {
 		TabledataFromXml tdfx = new TabledataFromXml();
 		List<Table> tables = tdfx.loadData("src/main/resources/tables.xml");
-//		for(Table table : tables){
-//			System.out.println(table.getTablename());
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("tables", tables);
-			tdfx.printToSql("toSqlTemplate.ftl", root, "create");
-//		}
+		//生成建表语句
+		Map<String, Object> root = new HashMap<String, Object>();
+		root.put("tables", tables);
+		tdfx.printToSql("toSqlTemplate.ftl", root, "create");
+		//生成model
+		for(Table table : tables){
+			root = new HashMap<>();
+			root.put("table", table);
+			tdfx.printToModel("toModelTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename()));
+		}
 	}
+
+	public void printToSql(String templateName, Map<String, Object> root, String outFileName) {
+        FileWriter out = null;
+        try {
+        	File outfile = new File("src/main/resources/schema/" + outFileName+".sql");
+            out = new FileWriter(outfile);
+            Template temp = this.getTemplate(templateName);
+            temp.process(root, out);
+    		System.out.println("成功生成" + outFileName+".sql");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+	public void printToModel(String templateName, Map<String, Object> root, String outFileName) {
+        FileWriter out = null;
+        try {
+        	File outfile = new File("src/main/java/com/stone/model/" + outFileName+".java");
+            out = new FileWriter(outfile);
+            Template temp = this.getTemplate(templateName);
+            temp.process(root, out);
+    		System.out.println("成功生成" + outFileName+".java");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	
+	public Template getTemplate(String name) {
+        try {
+            Configuration cfg = new Configuration();
+            cfg.setClassForTemplateLoading(this.getClass(), "/template");
+            Template temp = cfg.getTemplate(name);
+            return temp;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 	
 	@SuppressWarnings("unchecked")
 	public List<Table> loadData(String path){
@@ -166,38 +226,4 @@ public class TabledataFromXml {
 		}	
 		return tables;
 	}
-
-	public void printToSql(String templateName, Map<String, Object> root, String outFileName) {
-        FileWriter out = null;
-        try {
-        	File outfile = new File("src/main/resources/schema/" + outFileName+".sql");
-            out = new FileWriter(outfile);
-            Template temp = this.getTemplate(templateName);
-            temp.process(root, out);
-    		System.out.println("成功生成" + outFileName+".sql");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null)
-                    out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-	
-	public Template getTemplate(String name) {
-        try {
-            Configuration cfg = new Configuration();
-            cfg.setClassForTemplateLoading(this.getClass(), "/template");
-            Template temp = cfg.getTemplate(name);
-            return temp;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

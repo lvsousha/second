@@ -1,8 +1,8 @@
-package com.zcl.model;
+package com.stone.model;
 
 <#list table.fields as field>
 <#if field.reference??>
-import com.zcl.model.${field.reference?cap_first};
+import com.stone.model.${field.reference?cap_first};
 </#if>
 </#list>
 
@@ -12,19 +12,19 @@ import ${javaPackage};
 
 import java.io.Serializable;
 
-public class ${table.name?cap_first} implements Serializable {
+public class ${table.tablename?cap_first} implements Serializable {
 	private static final long serialVersionUID = 1447039680623L;
 
 <#list table.fields as field>
-    private ${field.javaType} ${field.name};
+    private ${field.javatype} ${field.name};
 </#list>
 
 <#list table.fields as field>
-	public void set${field.name?cap_first}(${field.javaType} ${field.name}){
+	public void set${field.name?cap_first}(${field.javatype} ${field.name}){
 		this.${field.name} = ${field.name};
 	}
 
-	public ${field.javaType} get${field.name?cap_first}(){
+	public ${field.javatype} get${field.name?cap_first}(){
 		return ${field.name};
 	}
 </#list>
