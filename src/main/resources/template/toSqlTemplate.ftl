@@ -1,4 +1,8 @@
+<#list tables?reverse as table>
+drop table ${table.prefix}${table.tablename}s
+</#list>
 
+<#list tables as table>
 create table ${table.prefix}${table.tablename}s(
 	<#list table.fields as field>
 		${field.prefix}${field.name} ${field.jdbctype} ${field.simpleConstraint}<#if field_has_next>,</#if>
@@ -10,3 +14,4 @@ create table ${table.prefix}${table.tablename}s(
 	<#list table.indexs as ind>
 		${index}<#if index_has_next>,</#if>
 	</#list>
+</#list>

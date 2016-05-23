@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tables>
 	<table tablename='menu' prefix='men_'>
-		<int name='id' isNull='0' key='primary' increase='1' />
+		<int name='id' isNull='0' key='primary' />
 		<varchar name='menuname' length='64' isNull='0' />
-		<ref name='parentmenu' isNUll='1' key='foreign' references='menu' />
+		<ref name='parentmenu' isNull='1' key='foreign' references='menu' />
+		<datetime name='created' isNull='0' defaultValue='getdate()' />
+		<datetime name='updated' isNull='0' defaultValue='getdate()' />
+	</table>
+	<table tablename='user' prefix='usr_'>
+		<int name='id' isNull='0' key='primary' />
+		<varchar name='username' length='64' isNull='0' />
+		<varchar name='password' length='64' isNull='0' />
+		<varchar name='email' length='64' isNull='0' />
 		<datetime name='created' isNull='0' defaultValue='getdate()' />
 		<datetime name='updated' isNull='0' defaultValue='getdate()' />
 	</table>

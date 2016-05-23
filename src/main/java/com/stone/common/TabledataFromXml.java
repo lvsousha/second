@@ -25,14 +25,15 @@ public class TabledataFromXml {
 	public static void main(String[] args) {
 		TabledataFromXml tdfx = new TabledataFromXml();
 		List<Table> tables = tdfx.loadData("src/main/resources/tables.xml");
-		for(Table table : tables){
-			System.out.println(table.getTablename());
+//		for(Table table : tables){
+//			System.out.println(table.getTablename());
 			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("table", table);
-			tdfx.printToSql("toSqlTemplate.ftl", root, table.getTablename());
-		}
+			root.put("tables", tables);
+			tdfx.printToSql("toSqlTemplate.ftl", root, "create");
+//		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Table> loadData(String path){
 		List<Table> tables = new ArrayList<Table>();
 		Map<String, Table> tableMaps = new HashMap<String, Table>();
@@ -72,7 +73,7 @@ public class TabledataFromXml {
 						if(name.equals("name"))
 							field.setName(value);
 						if(name.equals("isNull"))
-							field.setIsNull(value.equals("1")?"is null":"is not null");
+							field.setIsNull(value.equals("1")?" null":" not null");
 						if(name.endsWith("key"))
 							field.setKey(value);
 //						if(name.equals("increase"))
@@ -140,6 +141,9 @@ public class TabledataFromXml {
 						}else if(t == null){
 							foreigns.add("foreign key ("+field.getPrefix()+field.getName()+") references "+table.getPrefix()+table.getTablename()+"s("+columnPrefix+"id)");
 						}
+					}
+					if(field.getDefaultValue() != null){
+						field.setSimpleConstraint(field.getSimpleConstraint()+" default "+field.getDefaultValue());
 					}
 //					if(field.getIndex())
 //						indexs.add("create index idx_"+field.getName()+" on "+table.getPrefix()+table.getTablename()+"("+field.getPrefix()+field.getName()+");");
