@@ -35,6 +35,29 @@ public class TabledataFromXml {
 			root.put("table", table);
 			tdfx.printToModel("toModelTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename()));
 		}
+		//生成mybatis的接口和映射文件
+		for(Table table : tables){
+			File file = new File("src/main/java/com/stone/mapper/"+FileUtil.firstToUpcase(table.getTablename())+"Mapper.java");
+			if(file.exists()){
+				System.out.println(file.getPath()+"已存在");
+				continue;
+			}
+			root = new HashMap<>();
+			root.put("table", table);
+			tdfx.printToMapper("toInterfaceTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename())+"Mapper");
+			tdfx.printToXml("toMybatisXmlTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename()));
+		}
+		//生成mybatis的映射文件
+		for(Table table : tables){
+			File file = new File("src/main/resources/mapper/"+FileUtil.firstToUpcase(table.getTablename())+".xml");
+			if(file.exists()){
+				System.out.println(file.getPath()+"已存在");
+				continue;
+			}
+			root = new HashMap<>();
+			root.put("table", table);
+			tdfx.printToXml("toMybatisXmlTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename()));
+		}
 	}
 
 	public void printToSql(String templateName, Map<String, Object> root, String outFileName) {
@@ -67,6 +90,48 @@ public class TabledataFromXml {
             Template temp = this.getTemplate(templateName);
             temp.process(root, out);
     		System.out.println("成功生成" + outFileName+".java");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	
+	public void printToMapper(String templateName, Map<String, Object> root, String outFileName) {
+        FileWriter out = null;
+        try {
+        	File outfile = new File("src/main/java/com/stone/mapper/" + outFileName+".java");
+            out = new FileWriter(outfile);
+            Template temp = this.getTemplate(templateName);
+            temp.process(root, out);
+    		System.out.println("成功生成" + outFileName+".java");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }public void printToXml(String templateName, Map<String, Object> root, String outFileName) {
+        FileWriter out = null;
+        try {
+        	File outfile = new File("src/main/resources/mapper/" + outFileName+".xml");
+            out = new FileWriter(outfile);
+            Template temp = this.getTemplate(templateName);
+            temp.process(root, out);
+    		System.out.println("成功生成" + outFileName+".xml");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TemplateException e) {

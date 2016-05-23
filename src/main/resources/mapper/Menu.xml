@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stone.mapper.MenuMapper">
+
+    <resultMap type="com.stone.model.Menu" id="menuResult">
+        		<result property="id" column="men_id" />
+        		<result property="menuname" column="men_menuname" />
+        		<result property="created" column="men_created" />
+        		<result property="updated" column="men_updated" />
+    			<association property="parentmenu" column="men_parentmenu" select="com.stone.mapper.ParentmenuMapper.selectMenu"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.stone.model.Menu">
+		insert into sec_menus(
+						men_menuname,
+						men_parentmenu,
+						men_created,
+						men_updated
+		) values (
+					#{menuname,jdbctype=VARCHAR},
+					<choose><when test="parentmenu == null">NULL</when><otherwise>#{parentmenu.id,jdbctype=INTEGER}</otherwise></choose>,
+					#{created,jdbctype=DATE},
+					#{updated,jdbctype=DATE}
+		)
+	</insert>
+
+    <select id="select" parameterType="int" resultMap="menuResult">
+        select *
+        	from sec_menus where men_id=#{id}
+    </select>
+ 
+
+    <update id="update" parameterType="com.stone.model.Menu">
+        update
+        	sec_menus set
+        			men_id=#{id},
+        			men_menuname=#{menuname},
+        			men_parentmenu=<choose><when test="parentmenu == null">NULL</when><otherwise>#{parentmenu.id,jdbctype=INTEGER}</otherwise></choose>,
+        			men_created=#{created},
+        			men_updated=#{updated}
+        	where men_id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete
+        	from sec_menus
+        	where men_id=#{id}
+    </delete>
+
+</mapper>

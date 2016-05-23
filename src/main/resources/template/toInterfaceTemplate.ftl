@@ -1,14 +1,11 @@
-package com.zcl.dao;
+package com.stone.mapper;
 
-import com.zcl.model.${table.name?cap_first};
-import java.util.List;
+import com.stone.model.${table.tablename?cap_first};
 
-public interface ${table.name?cap_first}Dao {
+public interface ${table.tablename?cap_first}Mapper {
 
-	public ${table.name?cap_first} select(int id);
-	public ${table.name?cap_first} selectByName(String name);
-	public List<${table.name?cap_first}> selectAll();
-	public Integer insert(${table.name?cap_first} ${table.name});
-	public Integer delete(int id);
+	public ${table.tablename?cap_first} select${table.tablename?cap_first}(int id);
+	public Integer insert(${table.tablename?cap_first} ${table.tablename});
+	public Integer delete${table.tablename?cap_first}(int id);
 
 }
