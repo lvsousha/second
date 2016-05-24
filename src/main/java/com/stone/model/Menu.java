@@ -10,6 +10,7 @@ public class Menu implements Serializable {
 
     private Integer id;
     private String menuname;
+    private String url;
     private Menu parentmenu;
     private Date created;
     private Date updated;
@@ -27,6 +28,13 @@ public class Menu implements Serializable {
 
 	public String getMenuname(){
 		return menuname;
+	}
+	public void setUrl(String url){
+		this.url = url;
+	}
+
+	public String getUrl(){
+		return url;
 	}
 	public void setParentmenu(Menu parentmenu){
 		this.parentmenu = parentmenu;

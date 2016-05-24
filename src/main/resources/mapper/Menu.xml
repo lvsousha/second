@@ -6,28 +6,39 @@
     <resultMap type="com.stone.model.Menu" id="menuResult">
         		<result property="id" column="men_id" />
         		<result property="menuname" column="men_menuname" />
+        		<result property="url" column="men_url" />
         		<result property="created" column="men_created" />
         		<result property="updated" column="men_updated" />
-    			<association property="parentmenu" column="men_parentmenu" select="com.stone.mapper.ParentmenuMapper.selectMenu"/>
+    			<association property="parentmenu" column="men_parentmenu" select="com.stone.mapper.MenuMapper.selectMenu"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.stone.model.Menu">
 		insert into sec_menus(
 						men_menuname,
+						men_url,
 						men_parentmenu,
 						men_created,
 						men_updated
 		) values (
-					#{menuname,jdbctype=VARCHAR},
-					<choose><when test="parentmenu == null">NULL</when><otherwise>#{parentmenu.id,jdbctype=INTEGER}</otherwise></choose>,
-					#{created,jdbctype=DATE},
-					#{updated,jdbctype=DATE}
+					#{menuname,jdbcType=VARCHAR},
+					#{url,jdbcType=VARCHAR},
+					<choose><when test="parentmenu == null">NULL</when><otherwise>#{parentmenu.id,jdbcType=INTEGER}</otherwise></choose>,
+					#{created,jdbcType=DATE},
+					#{updated,jdbcType=DATE}
 		)
 	</insert>
 
-    <select id="select" parameterType="int" resultMap="menuResult">
+    <select id="selectMenu" parameterType="int" resultMap="menuResult">
         select *
         	from sec_menus where men_id=#{id}
+    </select>
+    
+    <select id="selectParentIsNull" resultMap="menuResult">
+        select * from sec_menus where men_parentmenu is null
+    </select>
+    
+    <select id="selectMenuByParent" parameterType="int" resultMap="menuResult">
+        select * from sec_menus where men_parentmenu=#{id}
     </select>
  
 
@@ -36,6 +47,7 @@
         	sec_menus set
         			men_id=#{id},
         			men_menuname=#{menuname},
+        			men_url=#{url},
         			men_parentmenu=<choose><when test="parentmenu == null">NULL</when><otherwise>#{parentmenu.id,jdbctype=INTEGER}</otherwise></choose>,
         			men_created=#{created},
         			men_updated=#{updated}

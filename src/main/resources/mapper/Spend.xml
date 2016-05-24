@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stone.mapper.SpendMapper">
+
+    <resultMap type="com.stone.model.Spend" id="spendResult">
+        		<result property="id" column="spe_id" />
+        		<result property="subject" column="spe_subject" />
+        		<result property="price" column="spe_price" />
+        		<result property="created" column="spe_created" />
+        		<result property="updated" column="spe_updated" />
+    			<association property="createdby" column="spe_createdby" select="com.stone.mapper.UserMapper.selectUser"/>
+    			<association property="updatedby" column="spe_updatedby" select="com.stone.mapper.UserMapper.selectUser"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.stone.model.Spend"  useGeneratedKeys="true" keyProperty="id">
+		insert into sec_spends(
+						spe_subject,
+						spe_price,
+						spe_createdby,
+						spe_updatedby,
+						spe_created,
+						spe_updated
+		) values (
+					#{subject,jdbcType=VARCHAR},
+					#{price,jdbcType=DECIMAL},
+					<choose><when test="createdby == null">NULL</when><otherwise>#{createdby.id,jdbcType=INTEGER}</otherwise></choose>,
+					<choose><when test="updatedby == null">NULL</when><otherwise>#{updatedby.id,jdbcType=INTEGER}</otherwise></choose>,
+					#{created,jdbcType=DATE},
+					#{updated,jdbcType=DATE}
+		)
+	</insert>
+
+    <select id="selectSpend" parameterType="int" resultMap="spendResult">
+        select *
+        	from sec_spends where spe_id=#{id}
+    </select>
+    
+    <select id="selectSpends" resultMap="spendResult">
+        select * from sec_spends
+    </select>
+ 
+
+    <update id="update" parameterType="com.stone.model.Spend">
+        update
+        	sec_spends set
+        			spe_subject=#{subject},
+        			spe_price=#{price},
+        			spe_createdby=<choose><when test="createdby == null">NULL</when><otherwise>#{createdby.id,jdbcType=INTEGER}</otherwise></choose>,
+        			spe_updatedby=<choose><when test="updatedby == null">NULL</when><otherwise>#{updatedby.id,jdbcType=INTEGER}</otherwise></choose>,
+        			spe_created=#{created},
+        			spe_updated=#{updated}
+        	where spe_id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete
+        	from sec_spends
+        	where spe_id=#{id}
+    </delete>
+
+</mapper>

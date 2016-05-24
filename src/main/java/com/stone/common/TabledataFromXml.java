@@ -38,19 +38,18 @@ public class TabledataFromXml {
 		//生成mybatis的接口和映射文件
 		for(Table table : tables){
 			File file = new File("src/main/java/com/stone/mapper/"+FileUtil.firstToUpcase(table.getTablename())+"Mapper.java");
-			if(file.exists()){
+			if(file.exists() && !table.getTablename().equals("spend")){
 				System.out.println(file.getPath()+"已存在");
 				continue;
 			}
 			root = new HashMap<>();
 			root.put("table", table);
 			tdfx.printToMapper("toInterfaceTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename())+"Mapper");
-			tdfx.printToXml("toMybatisXmlTemplate.ftl", root, FileUtil.firstToUpcase(table.getTablename()));
 		}
 		//生成mybatis的映射文件
 		for(Table table : tables){
 			File file = new File("src/main/resources/mapper/"+FileUtil.firstToUpcase(table.getTablename())+".xml");
-			if(file.exists()){
+			if(file.exists() && !table.getTablename().equals("spend")){
 				System.out.println(file.getPath()+"已存在");
 				continue;
 			}

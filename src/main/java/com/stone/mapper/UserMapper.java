@@ -10,4 +10,5 @@ public interface UserMapper {
 	public User selectUserByUsernameOrEmail(Map<String, String> parameters);
 	public User selectUserByEmail(String email);
 	public void update(User user);
+	public User selectUser(Integer id);
 }

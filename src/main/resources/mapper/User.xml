@@ -4,21 +4,21 @@
 <mapper namespace="com.stone.mapper.UserMapper">
 
     <resultMap type="com.stone.model.User" id="userResult">
-        		<result property="id" column="id" />
-        		<result property="username" column="username" />
-        		<result property="password" column="password" />
-        		<result property="email" column="email" />
-        		<result property="created" column="created" />
-        		<result property="updated" column="updated" />
+        		<result property="id" column="usr_id" />
+        		<result property="username" column="usr_username" />
+        		<result property="password" column="usr_password" />
+        		<result property="email" column="usr_email" />
+        		<result property="created" column="usr_created" />
+        		<result property="updated" column="usr_updated" />
     </resultMap>
 
     <insert id="insertUser" parameterType="com.stone.model.User">
-		insert into sec_user(
-						username,
-						password,
-						email,
-						created,
-						updated
+		insert into sec_users(
+						usr_username,
+						usr_password,
+						usr_email,
+						usr_created,
+						usr_updated
 		) values (
 					#{username,jdbcType=VARCHAR},
 					#{password,jdbcType=VARCHAR},
@@ -29,34 +29,39 @@
 	</insert>
 
     <select id="selectAll" resultMap="userResult">
-        select * from sec_user
+        select * from sec_users
+    </select>
+    
+    <select id="selectUser" parameterType="int" resultMap="userResult">
+        select *
+        	from sec_users where usr_id=#{id}
     </select>
 
     <select id="selectUserByUsername" parameterType="String" resultMap="userResult">
         select *
-        	from sec_user where username=#{username}
+        	from sec_users where usr_username=#{username}
     </select>
 
     <select id="selectUserByEmail" parameterType="String" resultMap="userResult">
         select *
-        	from sec_user where email =  #{email} 
+        	from sec_users where usr_email =  #{email} 
     </select>
     
     <select id="selectUserByUsernameOrEmail" parameterType="map" resultMap="userResult">
         select *
-        	from sec_user 
-        	where username = #{username} 
-        		  or email =  #{email} 
+        	from sec_users 
+        	where usr_username = #{username} 
+        		  or usr_email =  #{email} 
     </select>
 
     <update id="update" parameterType="com.stone.model.User">
         update
-        	sec_user set
-        			username=#{username},
-        			password=#{password},
-        			created=#{created},
-        			updated=#{updated}
-        	where id=#{id}
+        	sec_users set
+        			usr_username=#{username},
+        			usr_password=#{password},
+        			usr_created=#{created},
+        			usr_updated=#{updated}
+        	where usr_id=#{id}
     </update>
 
     <delete id="delete" parameterType="int">

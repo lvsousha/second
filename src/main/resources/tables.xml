@@ -3,6 +3,7 @@
 	<table tablename='menu' prefix='men_'>
 		<int name='id' isNull='0' key='primary' />
 		<varchar name='menuname' length='64' isNull='0' />
+		<varchar name='url' length='64' isNull='0' />
 		<ref name='parentmenu' isNull='1' key='foreign' references='menu' />
 		<datetime name='created' isNull='0' defaultValue='getdate()' />
 		<datetime name='updated' isNull='0' defaultValue='getdate()' />
@@ -12,6 +13,15 @@
 		<varchar name='username' length='64' isNull='0' />
 		<varchar name='password' length='64' isNull='0' />
 		<varchar name='email' length='64' isNull='0' />
+		<datetime name='created' isNull='0' defaultValue='getdate()' />
+		<datetime name='updated' isNull='0' defaultValue='getdate()' />
+	</table>
+	<table tablename='spend' prefix='spe_'>
+		<int name='id' isNull='0' key='primary' />
+		<varchar name='subject' length='64' isNull='0' />
+		<decimal name='price' precision='10' sacle='2' />
+		<ref name='createdby' isNull='0'  key='foreign' references='user' />
+		<ref name='updatedby' isNull='0'  key='foreign' references='user' />
 		<datetime name='created' isNull='0' defaultValue='getdate()' />
 		<datetime name='updated' isNull='0' defaultValue='getdate()' />
 	</table>

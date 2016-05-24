@@ -17,7 +17,7 @@ public class Field {
 	private String prefix;
 	private String index;
 	private String increase = "";
-	private String isNull = "is null";
+	private String isNull = " null";
 	private String simpleConstraint;
 	private List<String> foreigns;
 	private List<String> indexs;

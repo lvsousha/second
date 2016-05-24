@@ -11,12 +11,12 @@
         </#list>
         <#list table.fields as field>
     		<#if field.references??>
-    			<association property="${field.name}" column="${field.prefix}${field.name}" select="com.stone.mapper.${field.name?cap_first}Mapper.select${table.tablename?cap_first}"/>
+    			<association property="${field.name}"  column="${field.prefix}${field.name}" select="com.stone.mapper.${field.references?cap_first}Mapper.select${field.references?cap_first}"/>
     		</#if>
     </#list>
     </resultMap>
 
-    <insert id="insert" parameterType="com.stone.model.${table.tablename?cap_first}">
+    <insert id="insert"   parameterType="com.stone.model.${table.tablename?cap_first}"  useGeneratedKeys="true" keyProperty="id" >
 		insert into ${table.prefix}${table.tablename}s(
 				<#list table.fields as field>
 				<#if field_index gt 0 >
@@ -31,16 +31,16 @@
 				<#list table.fields as field>
 				<#if field_index gt 0 >
 				<#if field.references??>
-					<choose><when test="${field.name} == null">NULL</when><otherwise>${r'#{'}${field.name}.id,jdbctype=INTEGER${r'}'}</otherwise></choose><#if field_has_next>,</#if>
+					<choose><when test="${field.name} == null">NULL</when><otherwise>${r'#{'}${field.name}.id,jdbcType=INTEGER${r'}'}</otherwise></choose><#if field_has_next>,</#if>
 				<#else>
-					${r'#{'}${field.name},jdbctype=${field.inserttype}${r'}'}<#if field_has_next>,</#if>
+					${r'#{'}${field.name},jdbcType=${field.inserttype}${r'}'}<#if field_has_next>,</#if>
 				</#if>
 				</#if>
 		        </#list>
 		)
 	</insert>
 
-    <select id="select" parameterType="int" resultMap="${table.tablename}Result">
+    <select id="select${table.tablename?cap_first}" parameterType="int" resultMap="${table.tablename}Result">
         select *
         	from ${table.prefix}${table.tablename}s where ${table.columnPrefix}id=${r'#{'}id${r'}'}
     </select>
@@ -50,10 +50,12 @@
         update
         	${table.prefix}${table.tablename}s set
         	<#list table.fields as field>
+        		<#if ${field.name} != "id">
         		<#if field.references??>
-        			${field.prefix}${field.name}=<choose><when test="${field.name} == null">NULL</when><otherwise>${r'#{'}${field.name}.id,jdbctype=INTEGER${r'}'}</otherwise></choose><#if field_has_next>,</#if>
+        			${field.prefix}${field.name}=<choose><when test="${field.name} == null">NULL</when><otherwise>${r'#{'}${field.name}.id,jdbcType=INTEGER${r'}'}</otherwise></choose><#if field_has_next>,</#if>
         		<#else>
         			${field.prefix}${field.name}=${r'#{'}${field.name}${r'}'}<#if field_has_next>,</#if>
+        		</#if>
         		</#if>
 	        </#list>
         	where ${table.columnPrefix}id=${r'#{'}id${r'}'}

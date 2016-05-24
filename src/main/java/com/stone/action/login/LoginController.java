@@ -40,6 +40,7 @@ public class LoginController {
 
 	@Autowired
 	private UserMapper userMapper;
+	
 	private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 	private Map<Object, Object> returnMap = new HashMap<>();
 	
@@ -88,8 +89,11 @@ public class LoginController {
 			user.setUsername(username);
 			user.setPassword(password);
 			user.setEmail(email);
+			user.setCreated(new Date());
+			user.setUpdated(new Date());
 			userMapper.insertUser(user);
 			request.getSession().setAttribute("username", username);
+			returnMap.put("success", true);
 		}
 		try {
 			response.getWriter().print(gson.toJson(returnMap));

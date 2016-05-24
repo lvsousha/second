@@ -5,7 +5,7 @@
 			<h3 class="">Sign Up</h3>
 			<div class="alert alert-error hide">
 				<button class="close" data-dismiss="alert"></button>
-				<span>Enter any username and password.</span>
+				<span></span>
 			</div>
 
 			<p>Enter your account details below:</p>
