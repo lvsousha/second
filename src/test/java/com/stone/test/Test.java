@@ -35,8 +35,8 @@ public class Test {
 		Spend spend = new Spend();
 		spend.setCreatedby(userMapper.selectUserByUsername("stone"));
 		spend.setUpdatedby(userMapper.selectUserByUsername("stone"));
-		spend.setSubject("晚餐");
-		spend.setPrice(new BigDecimal(18));
+		spend.setSubject("中餐");
+		spend.setPrice(new BigDecimal(12));
 		spend.setCreated(cal.getTime());
 		spend.setUpdated(cal.getTime());
 		spendMapper.insert(spend);

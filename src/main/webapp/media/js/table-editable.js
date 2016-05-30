@@ -7,9 +7,13 @@ var TableEditable = function () {
             function restoreRow(oTable, nRow) {
                 var aData = oTable.fnGetData(nRow);
                 var jqTds = $('>td', nRow);
-
+                var temp = [];
+                for(var key in aData){
+                	temp.push(aData[key]);
+                }
+//                console.log(aData[i]);
                 for (var i = 0, iLen = jqTds.length; i < iLen; i++) {
-                    oTable.fnUpdate(aData[i], nRow, i, false);
+                    oTable.fnUpdate(temp[i], nRow, i, false);
                 }
 
                 oTable.fnDraw();
@@ -17,14 +21,39 @@ var TableEditable = function () {
 
             function editRow(oTable, nRow) {
                 var aData = oTable.fnGetData(nRow);
+//                console.log(aData);
                 var jqTds = $('>td', nRow);
-                jqTds[0].innerHTML = '<input type="text" class="m-wrap small" readonly="readonly" value="' + aData[0] + '">';
-                jqTds[1].innerHTML = '<input type="text" class="m-wrap small" value="' + aData[1] + '">';
-                jqTds[2].innerHTML = '<input type="text" class="m-wrap small" value="' + aData[2] + '">';
-                jqTds[3].innerHTML = '<input type="text" class="m-wrap small" readonly="readonly"  value="' + aData[3] + '">';
-                jqTds[4].innerHTML = '<input type="text" class="m-wrap small" readonly="readonly"  value="' + aData[4] + '">';
-                jqTds[5].innerHTML = '<a class="edit" href="">Save</a>';
-                jqTds[6].innerHTML = '<a class="cancel" href="">Cancel</a>';
+                var i = 0 ;
+                var isnew = false
+                for(var key in aData){
+                   if(key == "Delete"){
+                	   isnew = true;
+                   }
+                   if(i < $(jqTds).size()-2){
+                	   if(key == "subject" || key == "price"){
+                		   $(jqTds).get(i).innerHTML = '<input type="text" class="m-wrap small" value="' + aData[key] + '">';
+                	   }else{
+                		   $(jqTds).get(i).innerHTML = '<input type="text" class="m-wrap small" readonly="readonly" value="' + aData[key] + '">';
+                	   }                	   
+                   }
+//                   console.log(i);
+                   i++;
+                }
+//                console.log($(jqTds));
+//                $(jqTds).each(function(i){
+//                	$(jqTds).get(i).innerHTML = '<input type="text" class="m-wrap small" readonly="readonly" value="' + tmp[i] + '">';
+//                })
+//                jqTds[0].innerHTML = '<input type="text" class="m-wrap small" readonly="readonly" value="' + aData.id + '">';
+//                jqTds[1].innerHTML = '<input type="text" class="m-wrap small" value="' + aData.subject + '">';
+//                jqTds[2].innerHTML = '<input type="text" class="m-wrap small" value="' + aData.price + '">';
+//                jqTds[3].innerHTML = '<input type="text" class="m-wrap small" readonly="readonly"  value="' + aData.created + '">';
+//                jqTds[4].innerHTML = '<input type="text" class="m-wrap small" readonly="readonly"  value="' + aData.createdby + '">';
+                jqTds[$(jqTds).size()-2].innerHTML = '<a class="edit" href="">Save</a>';
+                if(isnew){
+                	jqTds[$(jqTds).size()-1].innerHTML = '<a class="cancel" data-mode="new"  href="">Cancel</a>';  
+                }else{
+                	jqTds[$(jqTds).size()-1].innerHTML = '<a class="cancel" href="">Cancel</a>';                	
+                }
             }
 
             function saveRow(oTable, nRow, spend) {
@@ -51,7 +80,9 @@ var TableEditable = function () {
             }
 
             var oTable = $('#sample_editable_1').dataTable({
-                "aLengthMenu": [
+            	"autoWidth": false,
+            	"aFilter": false,
+            	"aLengthMenu": [
                     [5, 15, 20, -1],
                     [5, 15, 20, "All"] // change per page values here
                 ],
@@ -66,12 +97,61 @@ var TableEditable = function () {
                         "sNext": "Next"
                     }
                 },
-                "aoColumnDefs": [{
-                        'bSortable': false,
-                        'aTargets': [0]
-                    }
-                ]
+                "columns":[{
+         		   "data":"id",
+         		   "title":"id",
+         		   "visible":true
+         	   },{
+         		   "data":"subject",
+         		   "title":"subject"
+         	   },{
+         		   "data": "price",
+         		   "defaultContent":"",
+         		   "title":"price"
+         	   },{
+         		   "data":"created",
+         		   "title":"created"
+         	   },{
+         		   "data":"createdby",
+         		   "title":"createdby"
+         	   },{
+         		   "data":null,
+        		   "defaultContent":"",
+         		   "title":"Edit"
+         	   },{
+         		  "data":null,
+         		  "title":"Delete",
+         		  "defaultContent":"",
+         	   }],
+         	  "columnDefs":[{
+	       		   targets: 5,
+	       		   render: function (a, b, c, d){
+	       			   var html = "<a class='edit' href='javascript:;'>Edit</a>";
+	                   return html;
+	       		   }
+         	  },{
+         		   targets: 6,
+	       		   render: function (a, b, c, d){
+	       			   var html = "<a class='delete' href='javascript:;'>Delete</a>";
+	                   return html;
+	       		   }
+         	  }],
+         	   "initComplete" : function (){
+         		   var api = this.api();
+         		   api.columns().indexes().flatten().each(function(i){			   
+         			   var column = api.column(i);
+         			   var select = $('<br/><input type="text" class="m-wrap small" />')
+         			   					.appendTo($(column.header()))
+         			   					.keypress(function(e){
+         			   						if(e.which == 13){
+         			   							var val = $.fn.dataTable.util.escapeRegex($(this).val());
+         			   							column.search(val).draw();			   							
+         			   						}
+         			   					})
+         		   })
+         	   } 
             });
+            
 
             jQuery('#sample_editable_1_wrapper .dataTables_filter input').addClass("m-wrap medium"); // modify table search input
             jQuery('#sample_editable_1_wrapper .dataTables_length select').addClass("m-wrap small"); // modify table per page dropdown
@@ -83,9 +163,22 @@ var TableEditable = function () {
 
             $('#sample_editable_1_new').click(function (e) {
                 e.preventDefault();
-                var aiNew = oTable.fnAddData(['', '', '', '', '',
-                        '<a class="edit" href="">Edit</a>', '<a class="cancel" data-mode="new" href="">Cancel</a>'
-                ]);
+                var api = oTable.api();
+                var columns = api.columns();
+//                console.log(api.columns());
+                var node = {};
+                for(var i=0; i<columns[0].length; i++){
+                	var key = columns.header()[i].innerHTML;
+                	key = key.substring(0,key.indexOf("<"));
+                	if(i < columns[0].length-2){
+                		node[key] = '';
+                	}else if(i == columns[0].length-2){
+                		node[key] = '<a class="edit" href="">Save</a>';
+                	}else{
+                		node[key] = '<a class="cancel" data-mode="new" href="" >Cancel</a>';
+                	}
+                }
+                var aiNew = oTable.fnAddData(node);
                 var nRow = oTable.fnGetNodes(aiNew[0]);
                 editRow(oTable, nRow);
                 nEditing = nRow;
@@ -100,7 +193,7 @@ var TableEditable = function () {
                 var nRow = $(this).parents('tr')[0];
                 var jqInputs = $(this).parent().siblings();
             	var spend = {id:jqInputs[0].innerHTML,subject:jqInputs[1].innerHTML,price:jqInputs[2].innerHTML};
-                console.log(spend);
+//                console.log(spend);
                 jQuery.ajax({
                 	url : "/second/spend/deleteRow",
 					data : spend,
@@ -117,18 +210,21 @@ var TableEditable = function () {
 					},
 					error:function(data){
 						alert("Deleted Failue! :)");
-						console.log(data);
+//						console.log(data);
 					}
                 })                
             });
 
             $('#sample_editable_1 a.cancel').live('click', function (e) {
                 e.preventDefault();
+//                console.log($(this).attr("data-mode"));
                 if ($(this).attr("data-mode") == "new") {
-                    var nRow = $(this).parents('tr')[0];
+                    alert("NEWin");
+                	var nRow = $(this).parents('tr')[0];
                     oTable.fnDeleteRow(nRow);
                 } else {
-                    restoreRow(oTable, nEditing);
+                    alert("in");
+                	restoreRow(oTable, nEditing);
                     nEditing = null;
                 }
             });
@@ -153,7 +249,7 @@ var TableEditable = function () {
                 	}else{
                 		url = "/second/spend/updateRow"
                 	}
-                    console.log(spend);
+//                    console.log(spend);
                     $.ajax({
                     	url : url,
     					data :spend,
@@ -163,7 +259,7 @@ var TableEditable = function () {
     					async : true,
     					success : function(data){
     						if(data.success == true){
-    							console.log(data.spend);
+//    							console.log(data.spend);
     							saveRow(oTable, nEditing, data.spend);
     		                    nEditing = null;
     						}else{
@@ -172,7 +268,7 @@ var TableEditable = function () {
     					},
     					error:function(data){
     						alert("error");
-    						console.log(data);
+//    						console.log(data);
     					}
                     })    
                 } else {

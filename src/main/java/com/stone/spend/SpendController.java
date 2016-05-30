@@ -42,6 +42,8 @@ public class SpendController {
 		ModelAndView mav = new ModelAndView("spend/editable");
 		mav.addObject("left",stoneController.getLeftBar());
 		mav.addObject("listcontent",spendMapper.selectSpends());
+		mav.addObject("parentName","Spend");
+		mav.addObject("childName","SpendList");
 		return mav;
 //		return "index/index";
 	}
