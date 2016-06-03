@@ -24,6 +24,19 @@
     <select id="count" resultType="java.lang.Integer">
         select count(1)  from ENT_BASIC a
     </select>
+    
+    <select id="select" parameterType="map" resultMap="basicResult">
+        select * 
+        from (
+	        select 
+	        	row_number() over (order by orderno) as _rn,a.*
+	        from ENT_BASIC a
+	        where 1=1 
+	        <if test="condition!=null">
+	        ${condition}
+	        </if>)e
+        where e._rn &gt;= #{start} and e._rn &lt;= #{limit}
+    </select>
 
 
 </mapper>

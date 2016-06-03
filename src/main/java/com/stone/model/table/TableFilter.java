@@ -6,6 +6,15 @@ public class TableFilter {
 	private Integer start;
 	private Search search;
 	private Integer draw;
+	private Column[] columns;
+
+	public Column[] getColumns() {
+		return columns;
+	}
+
+	public void setColumns(Column[] columns) {
+		this.columns = columns;
+	}
 
 	public Integer getStart() {
 		return start;

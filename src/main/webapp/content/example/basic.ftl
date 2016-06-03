@@ -44,11 +44,11 @@ $(document).ready( function () {
 	   "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
 	   "pageLength": 10,//改变初始的页面长度(每页显示的记录数)
 	   "pagingType": "full_numbers",
-	   "scrollY": "220px",//dt高度
+	   "scrollY": "360px",//dt高度
        "lengthChange": true,//是否允许用户自定义显示数量
        "bPaginate": true, //翻页功能
-       "bFilter": false, //列筛序功能
-       "searching": false,//本地搜索
+       "bFilter": true, //列筛序功能
+       "searching": true,//本地搜索
        "ordering": false, //排序功能
        "Info": true,//页脚信息
        "autoWidth": true,//自动宽度
@@ -86,10 +86,10 @@ $(document).ready( function () {
        "ajax":function(data, callback, settings){
     	   console.log(data);
     	   $.ajax({
-    		   type: "get",
+    		   type: "post",
     		   url:"/second/example/list",
-    		   data: data,
     		   dataType: "json",
+    		   data: {data:JSON.stringify(data)},
     		   success: function(result){
     			   callback(result);
     		   }

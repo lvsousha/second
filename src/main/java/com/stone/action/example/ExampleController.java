@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.stone.mapper.BasicMapper;
 import com.stone.model.Basic;
 import com.stone.model.table.TableFilter;
+import com.stone.service.DataTableService;
 
 @Controller
 @RequestMapping("")
@@ -27,6 +28,9 @@ public class ExampleController {
 	
 	@Autowired
 	BasicMapper basicMapper;
+	
+	@Autowired
+	DataTableService dataTableService;
 	
 	private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 	private Map<Object, Object> returnMap = new HashMap<>();
@@ -44,16 +48,18 @@ public class ExampleController {
 	}
 	
 	@RequestMapping(value="example/list")
-	public void examplelist(HttpServletRequest request, HttpServletResponse response, Integer length, TableFilter data){
-		Map<String,Integer> parameters = new HashMap<>();
-		System.out.println(data.getLength());
-		parameters.put("start", data.getStart());
-		parameters.put("limit", data.getLength());
-		List<Basic> basics = basicMapper.selectAll(parameters);
+	public void examplelist(HttpServletRequest request, HttpServletResponse response, String data){
+		TableFilter datas = gson.fromJson(data,new TableFilter().getClass());
+		Map<String,Object> parameters = dataTableService.getFilter(datas,"");
+		System.out.println(datas.getStart());
+		System.out.println(datas.getLength());
+//		parameters.put("start", datas.getStart()+1);
+//		parameters.put("limit", datas.getStart()+datas.getLength());
+		List<Basic> basics = basicMapper.select(parameters);
 		Integer total = basicMapper.count();
 		returnMap.put("data", basics);
 		returnMap.put("recordsFiltered", total);
-		returnMap.put("draw", data.getDraw());
+		returnMap.put("draw", datas.getDraw());
 		returnMap.put("recordsTotal", total);
 		try {
 			response.getWriter().print(gson.toJson(returnMap));

@@ -8,7 +8,7 @@ import com.stone.model.Basic;
 public interface BasicMapper {
 
 	public List<Basic> selectAll(Map<String,Integer> parameters);
-	public Basic select();
+	public List<Basic> select(Map<String,Object> parameters);
 	public Integer count();
 	public Basic select(String entname);
 
