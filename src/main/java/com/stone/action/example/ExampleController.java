@@ -51,8 +51,8 @@ public class ExampleController {
 	public void examplelist(HttpServletRequest request, HttpServletResponse response, String data){
 		TableFilter datas = gson.fromJson(data,new TableFilter().getClass());
 		Map<String,Object> parameters = dataTableService.getFilter(datas,"");
-		System.out.println(datas.getStart());
-		System.out.println(datas.getLength());
+		System.out.println(parameters.get("start"));
+		System.out.println(parameters.get("limit"));
 //		parameters.put("start", datas.getStart()+1);
 //		parameters.put("limit", datas.getStart()+datas.getLength());
 		List<Basic> basics = basicMapper.select(parameters);

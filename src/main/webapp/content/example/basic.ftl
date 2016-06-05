@@ -44,7 +44,7 @@ $(document).ready( function () {
 	   "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
 	   "pageLength": 10,//改变初始的页面长度(每页显示的记录数)
 	   "pagingType": "full_numbers",
-	   "scrollY": "360px",//dt高度
+	   "scrollY": "400px",//dt高度
        "lengthChange": true,//是否允许用户自定义显示数量
        "bPaginate": true, //翻页功能
        "bFilter": true, //列筛序功能
@@ -102,9 +102,11 @@ $(document).ready( function () {
 
 	   "columns":[{
 		   "data":"entname",
+		   "defaultContent":"",
 		   "title":"企业名称"
 	   },{
 		   "data":"frname",
+		   "defaultContent":"",
 		   "title":"法人"
 	   },{
 		   "data": "cardnum",
@@ -112,31 +114,22 @@ $(document).ready( function () {
 		   "title":"身份证号"
 	   },{
 		   "data":"regno",
+		   "defaultContent":"",
 		   "title":"工商注册号"
 	   },{
 		   "data":null,
+		   "defaultContent":"",
 		   "title":"输入框"
 	   }],
 	   "columnDefs":[{
 		   targets: 4,
 		   render: function (a, b, c, d){
-			   var context = {
-					   func:[{
-						   "name": "修改",
-						   "fn": "edit(\'" + c.name + "\',\'" + c.position + "\',\'" + c.salary + "\',\'" + c.start_date + "\',\'" + c.office + "\',\'" + c.extn + "\')",
-						   "type": "primary"
-					   },{
-						   "name": "删除",
-						   "fn": "del(\'" + c.name + "\')",
-						   "type": "danger"
-					   }]
-			   };
 			   var html = "<input />";
                return html;
 		   }
 	   }],
 	   "initComplete" : function (){
-		   console.log("initComplete");
+//		   console.log("initComplete");
 		   var api = this.api();
 		   api.columns().indexes().flatten().each(function(i){			   
 			   var column = api.column(i);
@@ -157,10 +150,16 @@ $(document).ready( function () {
     });
    $('.toggle-vis').on('change', function (e) {
        e.preventDefault();
-//       console.log($(this).attr('data-column'));
        var column = table.column($(this).attr('data-column'));
        column.visible(!column.visible());
    });
+   
+   $('#table tbody').on( 'click','tr',function () {
+	   var rowNode = table
+	    .row.add( {"name":       "Tiger Nixon",})
+	    .draw(false)
+	    .node();
+	} );
        
    
 } );

@@ -16,7 +16,7 @@ public class DataTableService {
 		String conditions = "";
 		Map<String, Object> condition = new HashMap<>();
 		Integer start = filter.getStart()+1;
-		Integer end = filter.getLength()+start;
+		Integer end = filter.getLength()+filter.getStart();
 //		Search search = filtser.getSearch();
 		Column[] columns = filter.getColumns();
 		for(Column column : columns){
