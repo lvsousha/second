@@ -3,6 +3,7 @@ package com.stone.spend;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import com.stone.mapper.SpendMapper;
 import com.stone.mapper.UserMapper;
 import com.stone.model.Spend;
 import com.stone.model.User;
+import com.stone.model.table.TableFilter;
+import com.stone.service.DataTableService;
 
 
 @Controller
@@ -32,14 +35,36 @@ public class SpendController {
 	SpendMapper spendMapper;
 	@Autowired
 	UserMapper userMapper;
+	@Autowired
+	DataTableService dataTableService;
 	
 	private Map<Object, Object> returnMap = new HashMap<>();
 	private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
 	
+	
+	@RequestMapping(value="spend/list")
+	public void list(HttpServletRequest request, HttpServletResponse response, String data){
+		TableFilter datas = gson.fromJson(data,new TableFilter().getClass());
+		Map<String,Object> parameters = dataTableService.getFilter(datas,"spe_");
+		System.out.println(parameters.get("start"));
+		System.out.println(parameters.get("limit"));
+		List<Spend> Spends = spendMapper.select(parameters);
+		Integer total = spendMapper.count(parameters);
+		returnMap.put("data", Spends);
+		returnMap.put("recordsFiltered", total);
+		returnMap.put("draw", datas.getDraw());
+		returnMap.put("recordsTotal", total);
+		try {
+			response.getWriter().print(gson.toJson(returnMap));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@RequestMapping(value="spendlist")
 	public ModelAndView spendList(){
 		System.out.println("访问spendList");
-		ModelAndView mav = new ModelAndView("spend/editable");
+		ModelAndView mav = new ModelAndView("spend/spend");
 		mav.addObject("left",stoneController.getLeftBar());
 		mav.addObject("listcontent",spendMapper.selectSpends());
 		mav.addObject("parentName","Spend");
@@ -63,13 +88,18 @@ public class SpendController {
 	@RequestMapping(value="spend/insertRow")
 	public void insertRow(HttpServletRequest request, HttpServletResponse response, Spend spend){
 		System.out.println("访问insertRow");
-		User user = userMapper.selectUserByUsername("stone");
-		spend.setCreatedby(user);
-		spend.setUpdatedby(user);
-		spend.setCreated(new Date());
-		spend.setUpdated(new Date());
-		spendMapper.insert(spend);
-		returnMap.put("success", true);
+		returnMap.clear();
+		if(spend.getSubject() != null && !spend.getSubject().equals("") && spend.getPrice() != null && !spend.getPrice().equals("")){
+			User user = userMapper.selectUserByUsername("stone");
+			spend.setCreatedby(user);
+			spend.setUpdatedby(user);
+			spend.setCreated(new Date());
+			spend.setUpdated(new Date());
+			spendMapper.insert(spend);
+			returnMap.put("success", true);			
+		}else{
+			returnMap.put("success", false);	
+		}
 		returnMap.put("spend", spend);
 		try {
 			response.getWriter().println(gson.toJson(returnMap));

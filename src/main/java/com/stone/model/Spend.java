@@ -2,6 +2,9 @@ package com.stone.model;
 
 
 import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 
 import java.io.Serializable;
@@ -14,7 +17,9 @@ public class Spend implements Serializable {
     private BigDecimal price;
     private User createdby;
     private User updatedby;
+    @DateTimeFormat(pattern="yyyy-MM-dd") 
     private Date created;
+    @DateTimeFormat(pattern="yyyy-MM-dd") 
     private Date updated;
 
 	public void setId(Integer id){

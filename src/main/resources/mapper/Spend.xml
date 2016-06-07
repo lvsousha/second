@@ -58,5 +58,27 @@
         	from sec_spends
         	where spe_id=#{id}
     </delete>
+    
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)  
+        	from sec_spends a
+        	where 1=1 
+	        <if test="condition!=null">
+	        ${condition}
+	        </if>
+    </select>
+    
+    <select id="select" parameterType="map" resultMap="spendResult">
+        select * 
+        from (
+	        select 
+	        	row_number() over (order by spe_id) as _rn,a.*
+	        from sec_spends a
+	        where 1=1 
+	        <if test="condition!=null">
+	        ${condition}
+	        </if>)e
+        where e._rn &gt;= #{start} and e._rn &lt;= #{limit}
+    </select>
 
 </mapper>

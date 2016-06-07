@@ -28,10 +28,11 @@
 	<!-- 对某些静态资源，如css,图片等进行过滤 ,有引用 "/resources/**" 的路径引用转到工程的/resources/目录取资源 -->
 	<mvc:resources mapping="/media/**" location="/media/" />
 	<mvc:resources mapping="/DataTables-1.10.7/**" location="/DataTables-1.10.7/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
 
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> -->
+	<mvc:annotation-driven />
 	<!-- <mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
