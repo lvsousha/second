@@ -1,4 +1,4 @@
-package com.stone.action.login;
+package com.stone.action;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

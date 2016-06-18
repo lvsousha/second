@@ -1,4 +1,4 @@
-package com.stone.action.example;
+package com.stone.action;
 
 import java.io.IOException;
 import java.util.HashMap;
