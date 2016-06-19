@@ -3,6 +3,7 @@ package com.stone.action;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,16 +137,17 @@ public class SpendController {
 		Map<String,List<Spend>> map = new HashMap<String, List<Spend>>();
 //		String templateDir =request.getSession().getServletContext().getRealPath("/")+"export/template.xls"; 
 //		String templateDir =this.getClass().getClassLoader().getResource("").getPath()+"export/template.xls";
-		String templateDir =request.getSession().getServletContext().getRealPath("/")+"export/template.xls";
-		System.out.println(templateDir);
+//		String templateDir =request.getSession().getServletContext().getRealPath("/")+"export/template.xls";
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("/export/template.xls");
 		map.put("spends", spends);
 		XLSTransformer transformer = new XLSTransformer(); 
 		try {
-			Workbook wb = transformer.transformXLS(new FileInputStream(templateDir), map);
-			response.addHeader("Content-Disposition", "attachment;filename=spendList.xls");
+//			Workbook wb = transformer.transformXLS(new FileInputStream(templateDir), map);
+			Workbook wbs = transformer.transformXLS(is, map);
 			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
+			response.addHeader("Content-Disposition", "attachment;filename=spendList.xls");
 			response.setContentType("application/vnd.ms-excel;charset=utf-8");
-			wb.write(toClient);
+			wbs.write(toClient);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
