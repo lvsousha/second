@@ -75,8 +75,10 @@
 							<div class="portlet-title">
 								<div class="caption"><i class="icon-reorder"></i>Inline Tabs</div>
 								<div class="tools">
-									<a href="javascript:;" class="collapse"></a>
-									<a href="#portlet-config" data-toggle="modal" class="config"></a>
+									<button id="export" class="btn green start" >
+										<i class="icon-upload icon-white" ></i>
+										<span>Export</span>
+									</button>
 								</div>
 							</div>
 							<div class="portlet-body">

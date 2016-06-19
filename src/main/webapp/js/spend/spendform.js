@@ -36,3 +36,10 @@ $("#new").click(function(){
 		$("#spend [name='"+field.name+"']").attr("value",temp);
 	});
 });
+
+$("#export").click(function(){
+	url = "/second/spend/export";
+	window.open(url);
+});
+
+

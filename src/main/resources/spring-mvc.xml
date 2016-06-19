@@ -29,6 +29,7 @@
 	<mvc:resources mapping="/media/**" location="/media/" />
 	<mvc:resources mapping="/DataTables-1.10.7/**" location="/DataTables-1.10.7/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/export/**" location="/export/" />
 
 	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> -->
