@@ -5,13 +5,13 @@
     xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:task="http://www.springframework.org/schema/task" 
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
            http://www.springframework.org/schema/tx
-           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
            http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/context/spring-context-3.2.xsd
            http://www.springframework.org/schema/task  
-		   http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+		   http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
     <!-- 自动搜索@Component , @Service , @Repository等标注的类 不搜索@Controller的类 -->
 	<!-- 自动扫描组件，这里要把web下面的 controller去除，他们是在spring3-servlet.xml中配置的，如果不去除会影响事务管理的。 -->
@@ -27,7 +27,7 @@
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     
     <!-- 数据库配置文件位置 -->
-    <context:property-placeholder location="classpath:jdbc.properties" />
+    <context:property-placeholder location="classpath:config.properties" />
 
 
     <!-- 配置jdbc数据源 -->
@@ -60,10 +60,11 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     
-    <bean id="graphDatabaseFactory" class="org.neo4j.graphdb.factory.GraphDatabaseFactory"></bean>    
-    <bean id="gds" factory-bean="graphDatabaseFactory" factory-method="newEmbeddedDatabase">
-		<constructor-arg value="/neo4j data/second"></constructor-arg>
-	</bean>
+    <!-- 图数据库new4j -->
+    <!-- <bean id="graphDatabaseFactory" class="org.neo4j.graphdb.factory.GraphDatabaseFactory"></bean>    
+   	<bean id="gds" factory-bean="graphDatabaseFactory" factory-method="newEmbeddedDatabase">
+		<constructor-arg value="${neo4j}" />
+	</bean> -->
 
     <!-- 使用annotation注解方式配置事务 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>

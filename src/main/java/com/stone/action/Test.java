@@ -1,9 +1,12 @@
 package com.stone.action;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -19,9 +22,17 @@ public class Test {
 	public static void main(String[] args) {
 		System.out.println("start:"+(new Date()));
 		Test test = new Test();
-		ApplicationContext ac = new ClassPathXmlApplicationContext(
-						"classpath*:spring-context.xml");
-		test.createSpend(ac);
+//		ApplicationContext ac = new ClassPathXmlApplicationContext(
+//						"classpath*:spring-context.xml");
+//		test.createSpend(ac);
+//		GraphDatabaseFactory gds = (GraphDatabaseFactory)ac.getBean("graphDatabaseFactory");
+		File file = new File("/neo4j");
+		try{
+			GraphDatabaseService gdb = new GraphDatabaseFactory().newEmbeddedDatabase("/neo4j");
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		System.out.println("end:"+(new Date()));
 	}
 	

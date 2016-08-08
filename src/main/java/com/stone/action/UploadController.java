@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.stone.action.StoneController;
+import com.stone.common.Config;
 import com.stone.mapper.SpendMapper;
 import com.stone.mapper.UserMapper;
 import com.stone.model.Spend;
@@ -57,6 +58,11 @@ public class UploadController {
 	
 	@RequestMapping(value="upload/upload")
 	public void upload(HttpServletRequest request,HttpServletResponse response){  
+		File fold = new File(Config.getProperties("upload")+"/"+request.getSession().getAttribute("username"));
+		if(!fold.exists()){
+			fold.mkdirs();
+		}
+		System.out.println(fold.getPath());
     	//创建一个通用的多部分解析器  
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());  
         //判断 request 是否有文件上传,即多部分请求  
@@ -77,7 +83,7 @@ public class UploadController {
                         //重命名上传后的文件名  
                         String fileName = "Upload--" + file.getOriginalFilename();  
                         //定义上传路径  
-                        String path = "E:/" + fileName;  
+                        String path = fold.getPath()+"/"+ fileName;  
                         File localFile = new File(path);  
                         try {
 							file.transferTo(localFile);

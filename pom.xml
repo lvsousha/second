@@ -19,6 +19,18 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+  	<dependency>
+		<groupId>org.springframework.data</groupId>
+		<artifactId>spring-data-neo4j</artifactId>
+		<version>3.0.3.RELEASE</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+<dependency>
+    <groupId>org.apache.lucene</groupId>
+    <artifactId>lucene-core</artifactId>
+    <version>5.3.1</version>
+</dependency>
+	
     <dependency>
     	<groupId>org.springframework</groupId>
     	<artifactId>spring-context</artifactId>
@@ -43,6 +55,16 @@
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-context-support</artifactId>
   		<version>3.1.0.RELEASE</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-core</artifactId>
+  		<version>4.0.6.RELEASE</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-test</artifactId>
+  		<version>3.2.3.RELEASE</version>
   	</dependency>
   	<dependency>
             <groupId>org.mybatis</groupId>
@@ -119,11 +141,20 @@
   		<artifactId>quartz</artifactId>
   		<version>2.1.0</version>
   	</dependency>
-  	<dependency>
-		<groupId>org.springframework.data</groupId>
-		<artifactId>spring-data-neo4j</artifactId>
-		<version>3.0.3.RELEASE</version>
-	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j -->
+<!-- <dependency>
+    <groupId>org.neo4j</groupId>
+    <artifactId>neo4j</artifactId>
+    <version>3.0.3</version>
+</dependency> -->
+	
+	
+	<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>1.4.4</version>
+		</dependency>
   </dependencies>
   <build>
     <finalName>second</finalName>
@@ -136,6 +167,15 @@
   				<scanIntervalSeconds>2</scanIntervalSeconds>
   			</configuration>
   		</plugin>
+  		 <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-compiler-plugin</artifactId>  
+                <version>3.1</version>  
+                <configuration>  
+                    <source>1.7</source>  
+                    <target>1.7</target>  
+                </configuration>  
+            </plugin>
   	</plugins>
   </build>
 </project>
